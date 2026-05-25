@@ -42,7 +42,7 @@
             const drinkInput = document.getElementById('drink').value;
 
             try {
-                const response = await fetch('https://order-drinks-1.onrender.com', {
+                const response = await fetch('https://order-drinks-1.onrender.com/send-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: nameInput, drink: drinkInput })
