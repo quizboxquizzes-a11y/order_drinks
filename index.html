@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drink Station</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 40px; display: flex; justify-content: center; }
+        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
+        h2 { margin-top: 0; color: #333; }
+        label { display: block; margin: 15px 0 5px; font-weight: bold; color: #555; }
+        input, select, button { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
+        button { background-color: #007bff; color: white; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Order a Drink</h2>
+        <form id="orderForm">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" required placeholder="E.g. Alex">
+
+            <label for="drink">Select Drink</label>
+            <select id="drink">
+                <option value="Water">Water 🫗</option>
+                <option value="Beer">Beer 🍺</option>
+                <option value="Coca Cola">Coca Cola 🥤</option>
+                <option value="Diet Coca Cola">Diet Coca Cola 🥤⬇️</option>
+            </select>
+
+            <button type="submit">Submit Order</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            
+            const nameInput = document.getElementById('name').value;
+            const drinkInput = document.getElementById('drink').value;
+
+            try {
+                const response = await fetch('http://localhost:3000/send-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: nameInput, drink: drinkInput })
+                });
+
+                if (response.ok) {
+                    alert(`Thanks ${nameInput}! Your order for a ${drinkInput} was sent.`);
+                    document.getElementById('orderForm').reset(); 
+                } else {
+                    alert('Oops! Something went wrong on the server.');
+                }
+            } catch (error) {
+                console.error('Connection error:', error);
+                alert('Could not connect to the backend server. Is it running?');
+            }
+        });
+    </script>
+</body>
+</html>
