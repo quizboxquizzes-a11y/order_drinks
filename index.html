@@ -41,21 +41,27 @@
 /* ---------- GLOBAL ---------- */
 body {
     margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background: var(--bg);
     font-family: "Inter", Arial, sans-serif;
     padding: 20px;
+    padding-top: 80px; /* ensures nothing is cut off */
     transition: background 0.4s ease;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Allow scrolling on mobile */
+html, body {
+    height: auto;
+    overflow-y: auto;
 }
 
 /* ---------- TOGGLE ---------- */
 .toggle-container {
-    position: absolute;
+    position: fixed;
     top: 20px;
     right: 20px;
+    z-index: 50;
 }
 
 .toggle {
@@ -88,6 +94,7 @@ body {
 .card {
     width: 100%;
     max-width: 420px;
+    margin: 0 auto;
     padding: 28px;
     border-radius: 18px;
     background: var(--glass);
