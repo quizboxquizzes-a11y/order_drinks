@@ -204,10 +204,10 @@ input {
     transform: scale(1.05);
 }
 
-/* Emoji images */
-.item-btn img {
-    width: 26px;
-    height: 26px;
+/* Medium emoji size */
+.item-btn .emoji {
+    font-size: 26px;
+    line-height: 1;
 }
 
 /* ---------- SUBMIT BUTTON ---------- */
@@ -292,32 +292,35 @@ const categories = {
     "Drinks": [
         ["Water", "💧"],
         ["Beer", "🍺"],
-        ["J20 Orange + Passionfruit", "🍊"],
-        ["J20 Apple + Raspberry", "🍎"],
+        ["J20 - Orange + Passionfruit", "🍊🥭"],
+        ["J20 - Apple + Raspberry", "🍎🍑"],
         ["Apple Juice", "🍏"],
-        ["Cider Berries", "🍒"],
-        ["Cider Kiwi Lime", "🥝"],
-        ["Fizzy J20 Mango", "🥤"],
-        ["Wine", "🍷"],
-        ["Sparkling Wine", "🥂"],
-        ["Gin & Tonic", "🍹"],
-        ["NA Gin & Tonic", "🚫"]
+        ["Berries and Cherries Cider", "🍒🍓"],
+        ["Kiwi and Lime Cider", "🥝🍋"],
+        ["Fizzy J20 - Apples and Mango", "🍏🥭"],
+        ["Chardonnay/Pinot Noir Wine", "🍷🍇"],
+        ["English Sparkling Wine", "🍾🥂"],
+        ["Gin and Tonic", "🍸🥂"],
+        ["Non-Alcoholic Gin and Tonic", "🚫🍸"],
+        ["Non-Alcoholic Real Sparkling Wine", "🚫🍷🍇"],
+        ["Graham Beck Sparkling Wine", "🍾🥂"]
     ],
     "Snacks": [
-        ["Crisps Original", "🥔"],
-        ["Crisps Sour Cream", "🥔"],
+        ["Good Crisp Company - Original", "🥔"],
+        ["Good Crisp Company - Sour Cream and Onion", "🥔🍦"],
+        ["Pringles - Sour Cream and Onion", "🥔🍦"],
         ["Tomatoes", "🍅"],
-        ["Lentil Chips", "🧂"],
-        ["Baileys Popcorn", "🍿"],
-        ["Strawberries & Chocolate", "🍓"]
+        ["Sea Salt Lentil Chips", "🧂🥣"],
+        ["Alcoholic Bailey's Popcorn", "🍿🎁"],
+        ["Strawberries and Chocolate", "🍓🍫"]
     ],
     "Ice Cream": [
-        ["Cornetto Strawberry", "🍧"],
-        ["Cornetto Chocolate", "🍫"],
-        ["Solero", "🍦"],
-        ["Magnum Pistachio", "🥜"],
-        ["Magnum Chocolate", "🍫"],
-        ["Mini Twister", "🍦"]
+        ["Strawberry Cornetto", "🍓🍦"],
+        ["Chocolate Cornetto", "🍫🍦"],
+        ["Orange Solero", "🍊🍦"],
+        ["Pistachio Magnum", "🍦🍫"],
+        ["Chocolate Magnum", "🍦🍫"],
+        ["Mini Twister", "🤝🍦🍭"]
     ]
 };
 
@@ -347,7 +350,7 @@ function renderItems(filter = "") {
             const btn = document.createElement("div");
             btn.className = "item-btn";
             btn.innerHTML = `
-                <img src="https://emojiapi.dev/api/v1/${emoji.codePointAt(0).toString(16)}/64.png">
+                <div class="emoji">${emoji}</div>
                 <span>${name}</span>
             `;
 
