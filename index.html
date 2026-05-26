@@ -7,11 +7,23 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 40px; display: flex; justify-content: center; }
         .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
-        h2 { margin-top: 0; color: #333; }
+        h2 { margin-top: 0; color: #333; text-align: center; }
         label { display: block; margin: 15px 0 5px; font-weight: bold; color: #555; }
         input, select, button { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        button { background-color: #007bff; color: white; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; transition: background 0.3s; }
         button:hover { background-color: #0056b3; }
+        
+        /* Tip Box Styling */
+        .tip-box {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #fff9e6;
+            border: 1px dashed #ffd700;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .tip-box p { margin: 0; font-size: 14px; color: #665c2e; line-height: 1.4; }
+        .tip-jar-icon { font-size: 20px; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -27,41 +39,41 @@
                 <option value="Water">Water 💧</option>
                 <option value="Beer">Beer 🍺</option>
                 <option value="J20 - Orange + Passionfruit">J20 - Orange + Passionfruit 🍊</option>
-                <option value="J20 - ">J20 - Apple + Raspberry 🍎</option>
+                <option value="J20 - Apple + Raspberry">J20 - Apple + Raspberry 🍎</option>
                 <option value="Apple Juice">Apple Juice 🍏</option>
                 <option value="Berries and Cherries Cider">Berries and Cherries Cider 🍻🍒</option>
-                <option value="Kiwi and Lime Cider">Kiwi and Lime Cider 🍻🍋‍🟩</option>
-                <option value="Fizzy J20 - Apples and Mango">Fizzy J20 - Apples and Mango 🥤🥭</option>
+                <option value="Kiwi and Lime Cider">Kiwi and Lime Cider 🍻</option>
+                <option value="Fizzy J20 - Apples and Mango">Fizzy J20 - Apples and Mango 🥤</option>
                 <option value="Chardonnay/Pinot Noir Wine">Chardonnay/Pinot Noir - Wine 🍷</option>
                 <option value="English Sparkling Wine">English Sparkling Wine 🫧🍷</option>
                 <option value="Gin and Tonic">Gin and Tonic 🍹</option>
-                <option value="Non-Alcaholic Gin and Tonic">Non-Alcaholic Gin and Tonic 🚫🍹</option>
-                <option value="Non-Alcaholic Real Sparkling Wine">Non-Alcaholic Real Sparkling Wine 🚫🍷</option>
+                <option value="Non-Alcoholic Gin and Tonic">Non-Alcoholic Gin and Tonic 🚫🍹</option>
+                <option value="Non-Alcoholic Real Sparkling Wine">Non-Alcoholic Real Sparkling Wine 🚫🍷</option>
                 <option value="Graham Beck Sparkling Wine">Graham Beck Sparkling Wine 🫧🍷</option>
-                <option value="Non-Alcaholic Gin and Tonic">Non-Alcaholic Gin and Tonic 🚫🍹</option>
-                <!------------------------------------------------->
+                <hr>
                 <option value="Good Crisp Company - Original">Good Crisp Company - Original 🥔</option>
-                <option value="Good Crisp Company - Sour Cream and Onion">Good Crisp Company - Sour Cream and Onion 🥔🍦</option>
-                <option value="Pringles - Sour Cream and Onion">Pringles - Sour Cream and Onion 🥸🥔🍦</option>
+                <option value="Good Crisp Company - Sour Cream and Onion">Good Crisp Company - Sour Cream and Onion 🥔</option>
+                <option value="Pringles - Sour Cream and Onion">Pringles - Sour Cream and Onion 🥔</option>
                 <option value="Tomatoes">Tomatoes 🍅</option>
-                <option value="Sea Salt Lentil Chips">Sea Salt Lentil Chips 🧂🫘</option>
-                <option value="Alcoholic Bailey's Popcorn"> Alcoholic Bailey's Popcorn 🍺🍿</option>
+                <option value="Sea Salt Lentil Chips">Sea Salt Lentil Chips 🧂</option>
+                <option value="Alcoholic Bailey's Popcorn"> Alcoholic Bailey's Popcorn 🍿</option>
                 <option value="Strawberries and Chocolate">Strawberries and Chocolate 🍓🍫</option>
-                <!------------------------------------------------->
+                <hr>
                 <option value="Strawberry Cornetto">Strawberry Cornetto 🍓🍧</option>
                 <option value="Chocolate Cornetto">Chocolate Cornetto 🍫🍧</option>
                 <option value="Orange Solero">Orange Solero 🍊🍦</option>
                 <option value="Pistachio Magnum">Pistachio Magnum 🥜🍦</option>
                 <option value="Chocolate Magnum">Chocolate Magnum 🍫🍦</option>
-                <option value="Mini Twister">Mini Twister 🤏🍧</option>
-                
+                <option value="Mini Twister">Mini Twister 🍦</option>
             </select>
-            <p style="margin-top: 20px; font-size: 15px; color: #444; text-align: center;">
-            If you're enjoying the drinks & snacks, feel free to leave a tip — it really helps keep the station running! 💛
-            </p>
 
             <button type="submit">Submit Order</button>
         </form>
+
+        <div class="tip-box">
+            <span class="tip-jar-icon">🍯</span>
+            <p>Enjoying the station? Tips are never expected but always appreciated to help keep the snacks stocked! 💛</p>
+        </div>
     </div>
 
     <script>
@@ -79,14 +91,14 @@
                 });
 
                 if (response.ok) {
-                    alert(`Thanks ${nameInput}! Your order for a ${drinkInput} was sent.`);
+                    alert(`Thanks ${nameInput}! Your order for ${drinkInput} was sent.`);
                     document.getElementById('orderForm').reset(); 
                 } else {
                     alert('Oops! Something went wrong on the server.');
                 }
             } catch (error) {
                 console.error('Connection error:', error);
-                alert('Could not connect to the backend server. Is it running?');
+                alert('Could not connect to the backend server.');
             }
         });
     </script>
