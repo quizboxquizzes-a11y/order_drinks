@@ -4,16 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drink Station</title>
+
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f9; padding: 40px; display: flex; justify-content: center; }
-        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
-        h2 { margin-top: 0; color: #333; text-align: center; }
-        label { display: block; margin: 15px 0 5px; font-weight: bold; color: #555; }
-        input, select, button { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-        button { background-color: #007bff; color: white; border: none; font-weight: bold; margin-top: 20px; cursor: pointer; transition: background 0.3s; }
-        button:hover { background-color: #0056b3; }
-        
-        /* Tip Box Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .success {
+            margin-top: 15px;
+            padding: 12px;
+            background: #e6ffe6;
+            border: 1px solid #66cc66;
+            border-radius: 6px;
+            color: #2d662d;
+            display: none;
+            text-align: center;
+        }
+
         .tip-box {
             margin-top: 25px;
             padding: 15px;
@@ -22,53 +78,76 @@
             border-radius: 6px;
             text-align: center;
         }
-        .tip-box p { margin: 0; font-size: 14px; color: #665c2e; line-height: 1.4; }
-        .tip-jar-icon { font-size: 20px; display: block; margin-bottom: 5px; }
+
+        .tip-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #665c2e;
+            line-height: 1.4;
+        }
+
+        .tip-jar-icon {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="card">
         <h2>Order a Drink</h2>
+
         <form id="orderForm">
             <label for="name">Your Name</label>
             <input type="text" id="name" required placeholder="E.g. Bob">
 
             <label for="drink">Select Drink/Snack</label>
-            <select id="drink">
-                <option value="Water">Water 💧</option>
-                <option value="Beer">Beer 🍺</option>
-                <option value="J20 - Orange + Passionfruit">J20 - Orange + Passionfruit 🍊</option>
-                <option value="J20 - Apple + Raspberry">J20 - Apple + Raspberry 🍎</option>
-                <option value="Apple Juice">Apple Juice 🍏</option>
-                <option value="Berries and Cherries Cider">Berries and Cherries Cider 🍻🍒</option>
-                <option value="Kiwi and Lime Cider">Kiwi and Lime Cider 🍻</option>
-                <option value="Fizzy J20 - Apples and Mango">Fizzy J20 - Apples and Mango 🥤</option>
-                <option value="Chardonnay/Pinot Noir Wine">Chardonnay/Pinot Noir - Wine 🍷</option>
-                <option value="English Sparkling Wine">English Sparkling Wine 🫧🍷</option>
-                <option value="Gin and Tonic">Gin and Tonic 🍹</option>
-                <option value="Non-Alcoholic Gin and Tonic">Non-Alcoholic Gin and Tonic 🚫🍹</option>
-                <option value="Non-Alcoholic Real Sparkling Wine">Non-Alcoholic Real Sparkling Wine 🚫🍷</option>
-                <option value="Graham Beck Sparkling Wine">Graham Beck Sparkling Wine 🫧🍷</option>
-                <hr>
-                <option value="Good Crisp Company - Original">Good Crisp Company - Original 🥔</option>
-                <option value="Good Crisp Company - Sour Cream and Onion">Good Crisp Company - Sour Cream and Onion 🥔</option>
-                <option value="Pringles - Sour Cream and Onion">Pringles - Sour Cream and Onion 🥔</option>
-                <option value="Tomatoes">Tomatoes 🍅</option>
-                <option value="Sea Salt Lentil Chips">Sea Salt Lentil Chips 🧂</option>
-                <option value="Alcoholic Bailey's Popcorn"> Alcoholic Bailey's Popcorn 🍿</option>
-                <option value="Strawberries and Chocolate">Strawberries and Chocolate 🍓🍫</option>
-                <hr>
-                <option value="Strawberry Cornetto">Strawberry Cornetto 🍓🍧</option>
-                <option value="Chocolate Cornetto">Chocolate Cornetto 🍫🍧</option>
-                <option value="Orange Solero">Orange Solero 🍊🍦</option>
-                <option value="Pistachio Magnum">Pistachio Magnum 🥜🍦</option>
-                <option value="Chocolate Magnum">Chocolate Magnum 🍫🍦</option>
-                <option value="Mini Twister">Mini Twister 🍦</option>
+            <select id="drink" required>
+
+                <optgroup label="Drinks">
+                    <option value="Water">Water 💧</option>
+                    <option value="Beer">Beer 🍺</option>
+                    <option value="J20 - Orange + Passionfruit">J20 - Orange + Passionfruit 🍊</option>
+                    <option value="J20 - Apple + Raspberry">J20 - Apple + Raspberry 🍎</option>
+                    <option value="Apple Juice">Apple Juice 🍏</option>
+                    <option value="Berries and Cherries Cider">Berries and Cherries Cider 🍻🍒</option>
+                    <option value="Kiwi and Lime Cider">Kiwi and Lime Cider 🍻</option>
+                    <option value="Fizzy J20 - Apples and Mango">Fizzy J20 - Apples and Mango 🥤</option>
+                    <option value="Chardonnay/Pinot Noir Wine">Chardonnay/Pinot Noir Wine 🍷</option>
+                    <option value="English Sparkling Wine">English Sparkling Wine 🫧🍷</option>
+                    <option value="Gin and Tonic">Gin and Tonic 🍹</option>
+                    <option value="Non-Alcoholic Gin and Tonic">Non-Alcoholic Gin and Tonic 🚫🍹</option>
+                    <option value="Non-Alcoholic Real Sparkling Wine">Non-Alcoholic Real Sparkling Wine 🚫🍷</option>
+                    <option value="Graham Beck Sparkling Wine">Graham Beck Sparkling Wine 🫧🍷</option>
+                </optgroup>
+
+                <optgroup label="Snacks">
+                    <option value="Good Crisp Company - Original">Good Crisp Company - Original 🥔</option>
+                    <option value="Good Crisp Company - Sour Cream and Onion">Good Crisp Company - Sour Cream and Onion 🥔</option>
+                    <option value="Pringles - Sour Cream and Onion">Pringles - Sour Cream and Onion 🥔</option>
+                    <option value="Tomatoes">Tomatoes 🍅</option>
+                    <option value="Sea Salt Lentil Chips">Sea Salt Lentil Chips 🧂</option>
+                    <option value="Alcoholic Bailey's Popcorn">Alcoholic Bailey's Popcorn 🍿</option>
+                    <option value="Strawberries and Chocolate">Strawberries and Chocolate 🍓🍫</option>
+                </optgroup>
+
+                <optgroup label="Ice Cream">
+                    <option value="Strawberry Cornetto">Strawberry Cornetto 🍓🍧</option>
+                    <option value="Chocolate Cornetto">Chocolate Cornetto 🍫🍧</option>
+                    <option value="Orange Solero">Orange Solero 🍊🍦</option>
+                    <option value="Pistachio Magnum">Pistachio Magnum 🥜🍦</option>
+                    <option value="Chocolate Magnum">Chocolate Magnum 🍫🍦</option>
+                    <option value="Mini Twister">Mini Twister 🍦</option>
+                </optgroup>
+
             </select>
 
-            <button type="submit">Submit Order</button>
+            <button type="submit" id="submitBtn">Submit Order</button>
         </form>
+
+        <div class="success" id="successBox"></div>
 
         <div class="tip-box">
             <span class="tip-jar-icon">🍯</span>
@@ -77,30 +156,41 @@
     </div>
 
     <script>
-        document.getElementById('orderForm').addEventListener('submit', async (e) => {
-            e.preventDefault(); 
-            
-            const nameInput = document.getElementById('name').value;
-            const drinkInput = document.getElementById('drink').value;
+        const form = document.getElementById('orderForm');
+        const successBox = document.getElementById('successBox');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const drink = document.getElementById('drink').value;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Sending...";
 
             try {
                 const response = await fetch('https://order-drinks-1.onrender.com/send-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: nameInput, drink: drinkInput })
+                    body: JSON.stringify({ name, drink })
                 });
 
                 if (response.ok) {
-                    alert(`Thanks ${nameInput}! Your order for ${drinkInput} was sent.`);
-                    document.getElementById('orderForm').reset(); 
+                    successBox.textContent = `Thanks ${name}! Your order for ${drink} was sent.`;
+                    successBox.style.display = "block";
+                    form.reset();
                 } else {
-                    alert('Oops! Something went wrong on the server.');
+                    alert("Server error. Try again later.");
                 }
-            } catch (error) {
-                console.error('Connection error:', error);
-                alert('Could not connect to the backend server.');
+            } catch (err) {
+                alert("Could not connect to the server.");
             }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit Order";
         });
     </script>
+
 </body>
 </html>
