@@ -170,7 +170,7 @@ input {
     opacity: 0.8;
 }
 
-/* ---------- NEATER BUTTONS (NO OVERFLOW) ---------- */
+/* ---------- NEATER BUTTONS (BIGGER BOX, SMALLER EMOJI, BIGGER TEXT) ---------- */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -178,7 +178,7 @@ input {
 }
 
 .item-btn {
-    padding: 10px 6px;
+    padding: 12px 6px;
     border-radius: 14px;
     border: 1px solid var(--glass-border);
     background: var(--button-bg);
@@ -190,7 +190,7 @@ input {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 100px;
+    height: 120px; /* bigger box */
     box-sizing: border-box;
     overflow: hidden;
 }
@@ -207,23 +207,23 @@ input {
     transform: scale(1.06);
 }
 
-/* Medium emoji size */
+/* Smaller emoji */
 .item-btn .emoji {
-    font-size: 26px;
+    font-size: 20px;
     line-height: 1;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     white-space: nowrap;
 }
 
-/* Cleaner text — wraps safely */
+/* Bigger text */
 .item-btn span {
-    font-size: 10px;
-    line-height: 1.1;
-    opacity: 0.9;
+    font-size: 13px;
+    line-height: 1.2;
+    opacity: 0.95;
     max-width: 100%;
     text-align: center;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3; /* allow 3 lines now */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
