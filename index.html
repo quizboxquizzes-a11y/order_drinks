@@ -133,19 +133,20 @@ h2 {
     font-weight: 600;
 }
 
-/* ---------- INPUTS ---------- */
+/* ---------- INPUTS (CENTERED BOXES) ---------- */
 label {
     color: var(--text);
     font-weight: 600;
     margin-bottom: 6px;
     display: block;
-    text-align: left; /* LEFT ALIGN LABELS */
+    text-align: left;
 }
 
 input {
-    width: 100%;
+    width: 70%;
+    max-width: 260px;
     padding: 12px;
-    margin: 0 auto 18px auto; /* CENTER INPUT BOX */
+    margin: 0 auto 18px auto;
     border-radius: 10px;
     border: 1px solid var(--glass-border);
     background: rgba(255,255,255,0.7);
@@ -153,7 +154,7 @@ input {
     font-size: 15px;
     outline: none;
     display: block;
-    text-align: center; /* TEXT CENTERED */
+    text-align: center;
 }
 
 .dark input {
@@ -298,7 +299,7 @@ const categories = {
         ["Cider Kiwi Lime", "🥝"],
         ["Fizzy J20 Mango", "🥤"],
         ["Wine", "🍷"],
-        ["Sparkling Wine", "🥂"],  // FIXED EMOJI
+        ["Sparkling Wine", "🥂"],
         ["Gin & Tonic", "🍹"],
         ["NA Gin & Tonic", "🚫"]
     ],
