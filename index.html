@@ -170,7 +170,7 @@ input {
     opacity: 0.8;
 }
 
-/* ---------- NEATER BUTTONS ---------- */
+/* ---------- NEATER BUTTONS (NO OVERFLOW) ---------- */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -178,7 +178,7 @@ input {
 }
 
 .item-btn {
-    padding: 14px 6px;
+    padding: 10px 6px;
     border-radius: 14px;
     border: 1px solid var(--glass-border);
     background: var(--button-bg);
@@ -189,9 +189,10 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 90px;
+    justify-content: flex-start;
+    height: 100px;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 .item-btn:hover {
@@ -210,14 +211,21 @@ input {
 .item-btn .emoji {
     font-size: 26px;
     line-height: 1;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    white-space: nowrap;
 }
 
-/* Cleaner text */
+/* Cleaner text — wraps safely */
 .item-btn span {
-    font-size: 11px;
-    line-height: 1.2;
+    font-size: 10px;
+    line-height: 1.1;
     opacity: 0.9;
+    max-width: 100%;
+    text-align: center;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* ---------- SUBMIT BUTTON ---------- */
