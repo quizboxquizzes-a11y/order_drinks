@@ -44,13 +44,11 @@ body {
     background: var(--bg);
     font-family: "Inter", Arial, sans-serif;
     padding: 20px;
-    padding-top: 80px; /* ensures nothing is cut off */
+    padding-top: 80px;
     transition: background 0.4s ease;
     min-height: 100vh;
-    box-sizing: border-box;
 }
 
-/* Allow scrolling on mobile */
 html, body {
     height: auto;
     overflow-y: auto;
@@ -101,12 +99,6 @@ html, body {
     backdrop-filter: blur(14px);
     border: 1px solid var(--glass-border);
     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    animation: fadeIn 0.6s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ---------- HEADER ---------- */
@@ -132,7 +124,6 @@ html, body {
     stroke-linecap: round;
     stroke-linejoin: round;
     opacity: 0.85;
-    transition: stroke 0.4s ease;
 }
 
 h2 {
@@ -148,6 +139,7 @@ label {
     font-weight: 600;
     margin-bottom: 6px;
     display: block;
+    text-align: center;
 }
 
 input {
@@ -160,7 +152,7 @@ input {
     color: var(--text);
     font-size: 15px;
     outline: none;
-    transition: 0.25s;
+    text-align: center;
 }
 
 .dark input {
@@ -228,7 +220,6 @@ button.submit {
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.25s;
 }
 
 button.submit:hover {
@@ -306,7 +297,7 @@ const categories = {
         ["Cider Kiwi Lime", "🥝"],
         ["Fizzy J20 Mango", "🥤"],
         ["Wine", "🍷"],
-        ["Sparkling Wine", "🫧"],
+        ["Sparkling Wine", "🥂"],  // FIXED EMOJI
         ["Gin & Tonic", "🍹"],
         ["NA Gin & Tonic", "🚫"]
     ],
@@ -329,7 +320,7 @@ const categories = {
 };
 
 const container = document.getElementById("categories");
-let selectedItem = null;
+let selectedItems = [];
 
 /* ---------- RENDER CATEGORIES ---------- */
 function renderItems(filter = "") {
@@ -358,10 +349,16 @@ function renderItems(filter = "") {
                 <span>${name}</span>
             `;
 
+            if (selectedItems.includes(name)) btn.classList.add("selected");
+
             btn.addEventListener("click", () => {
-                document.querySelectorAll(".item-btn").forEach(b => b.classList.remove("selected"));
-                btn.classList.add("selected");
-                selectedItem = name;
+                btn.classList.toggle("selected");
+
+                if (selectedItems.includes(name)) {
+                    selectedItems = selectedItems.filter(i => i !== name);
+                } else {
+                    selectedItems.push(name);
+                }
             });
 
             grid.appendChild(btn);
@@ -388,8 +385,8 @@ form.addEventListener('submit', async (e) => {
 
     const name = document.getElementById('name').value;
 
-    if (!selectedItem) {
-        alert("Please select an item.");
+    if (selectedItems.length === 0) {
+        alert("Please select at least one item.");
         return;
     }
 
@@ -400,14 +397,14 @@ form.addEventListener('submit', async (e) => {
         const response = await fetch('https://order-drinks-1.onrender.com/send-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, drink: selectedItem })
+            body: JSON.stringify({ name, drink: selectedItems })
         });
 
         if (response.ok) {
-            successBox.textContent = `Thanks ${name}! Your order for ${selectedItem} was sent.`;
+            successBox.textContent = `Thanks ${name}! Your order for ${selectedItems.join(", ")} was sent.`;
             successBox.style.display = "block";
             form.reset();
-            selectedItem = null;
+            selectedItems = [];
             renderItems();
         } else {
             alert("Server error. Try again later.");
