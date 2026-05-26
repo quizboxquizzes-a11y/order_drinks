@@ -170,13 +170,14 @@ input {
     opacity: 0.8;
 }
 
-/* ---------- NEATER BUTTONS (BIGGER BOX, SMALLER EMOJI, BIGGER TEXT) ---------- */
+/* ---------- BUTTON GRID ---------- */
 .grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
 }
 
+/* ---------- BUTTONS WITH NO CUT-OFF ---------- */
 .item-btn {
     padding: 12px 6px;
     border-radius: 14px;
@@ -190,9 +191,9 @@ input {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 120px; /* bigger box */
+    min-height: 120px;
+    height: auto;
     box-sizing: border-box;
-    overflow: hidden;
 }
 
 .item-btn:hover {
@@ -215,17 +216,15 @@ input {
     white-space: nowrap;
 }
 
-/* Bigger text */
+/* Bigger text — NO CUT-OFFS */
 .item-btn span {
     font-size: 13px;
-    line-height: 1.2;
+    line-height: 1.25;
     opacity: 0.95;
     max-width: 100%;
     text-align: center;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* allow 3 lines now */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 /* ---------- SUBMIT BUTTON ---------- */
