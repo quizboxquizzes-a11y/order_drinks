@@ -9,348 +9,112 @@
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
 <circle cx='50' cy='50' r='46' fill='rgba(255,255,255,0.15)' stroke='black' stroke-width='4'/>
 <path d='M35 25h30l-3 40a12 12 0 0 1-24 0l-3-40z' fill='white' stroke='black' stroke-width='3' stroke-linejoin='round'/>
-</svg>
-">
+</svg>">
 
 <style>
-/* ---------- THEME VARIABLES ---------- */
 :root {
-    --bg: #e5e5e5;
-    --text: #111;
-    --glass: rgba(255, 255, 255, 0.55);
-    --glass-border: rgba(0, 0, 0, 0.15);
-    --button-bg: rgba(0, 0, 0, 0.05);
-    --button-hover: rgba(0, 0, 0, 0.12);
-    --button-active: rgba(0, 0, 0, 0.25);
+    --bg: #e5e5e5; --text: #111; --glass: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(0, 0, 0, 0.15); --button-bg: rgba(0, 0, 0, 0.05);
+    --button-hover: rgba(0, 0, 0, 0.12); --button-active: rgba(0, 0, 0, 0.25);
     --glow: 0 0 12px rgba(0,0,0,0.4);
 }
-
-/* DARK MODE */
 .dark {
-    --bg: #111;
-    --text: #f5f5f5;
-    --glass: rgba(30, 30, 30, 0.55);
-    --glass-border: rgba(255, 255, 255, 0.15);
-    --button-bg: rgba(255, 255, 255, 0.08);
-    --button-hover: rgba(255, 255, 255, 0.15);
-    --button-active: rgba(255, 255, 255, 0.25);
+    --bg: #111; --text: #f5f5f5; --glass: rgba(30, 30, 30, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.15); --button-bg: rgba(255, 255, 255, 0.08);
+    --button-hover: rgba(255, 255, 255, 0.15); --button-active: rgba(255, 255, 255, 0.25);
     --glow: 0 0 12px rgba(255,255,255,0.4);
 }
 
-/* ---------- GLOBAL ---------- */
-body {
-    margin: 0;
-    background: var(--bg);
-    font-family: "Inter", Arial, sans-serif;
-    padding: 20px;
-    padding-top: 80px;
-    transition: background 0.4s ease;
-    min-height: 100vh;
-}
+body { margin: 0; background: var(--bg); font-family: "Inter", sans-serif; padding: 20px; padding-top: 80px; transition: background 0.4s; min-height: 100vh; }
 
-html, body {
-    height: auto;
-    overflow-y: auto;
-}
+.toggle-container { position: fixed; top: 20px; right: 20px; z-index: 50; }
+.toggle { width: 50px; height: 26px; background: var(--glass); border-radius: 20px; border: 1px solid var(--glass-border); cursor: pointer; position: relative; }
+.toggle-circle { width: 20px; height: 20px; background: var(--text); border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: 0.3s; }
+.dark .toggle-circle { transform: translateX(24px); }
 
-/* ---------- TOGGLE ---------- */
-.toggle-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 50;
-}
+.card { width: 100%; max-width: 420px; margin: 0 auto; padding: 28px; border-radius: 18px; background: var(--glass); backdrop-filter: blur(14px); border: 1px solid var(--glass-border); box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+.header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+h2 { color: var(--text); margin: 0; font-size: 22px; }
 
-.toggle {
-    width: 50px;
-    height: 26px;
-    background: var(--glass);
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    position: relative;
-}
+label { color: var(--text); font-weight: 600; margin: 10px 0 5px; display: block; }
+input { width: 80%; padding: 12px; margin: 0 auto 18px auto; border-radius: 10px; border: 1px solid var(--glass-border); background: rgba(255,255,255,0.7); color: var(--text); display: block; text-align: center; font-size: 16px; }
+.dark input { background: rgba(40,40,40,0.7); }
 
-.toggle-circle {
-    width: 20px;
-    height: 20px;
-    background: var(--text);
-    border-radius: 50%;
-    position: absolute;
-    top: 3px;
-    left: 3px;
-    transition: 0.3s;
-}
+.category { margin: 20px 0 8px; font-size: 14px; font-weight: 700; color: var(--text); opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 
-.dark .toggle-circle {
-    transform: translateX(24px);
-}
+.item-btn { padding: 10px 5px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--button-bg); cursor: pointer; text-align: center; transition: 0.2s; color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 110px; justify-content: flex-start; position: relative; }
+.item-btn.selected { background: var(--button-active); border-color: var(--text); box-shadow: var(--glow); transform: scale(1.05); }
+.item-btn.out-of-stock { opacity: 0.25; pointer-events: none; filter: grayscale(1); }
+.emoji { font-size: 24px; margin-bottom: 5px; }
+.item-name { font-size: 12px; font-weight: 500; line-height: 1.2; }
+.badge { position: absolute; top: -5px; right: -5px; background: #3498db; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
-/* ---------- CARD ---------- */
-.card {
-    width: 100%;
-    max-width: 420px;
-    margin: 0 auto;
-    padding: 28px;
-    border-radius: 18px;
-    background: var(--glass);
-    backdrop-filter: blur(14px);
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-}
-
-/* ---------- HEADER ---------- */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.logo {
-    width: 26px;
-    height: 26px;
-}
-
-.logo-svg {
-    width: 100%;
-    height: 100%;
-    stroke: var(--text);
-    fill: none;
-    stroke-width: 6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0.85;
-}
-
-h2 {
-    color: var(--text);
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-}
-
-/* ---------- INPUTS ---------- */
-label {
-    color: var(--text);
-    font-weight: 600;
-    margin-bottom: 6px;
-    display: block;
-    text-align: left;
-}
-
-input {
-    width: 70%;
-    max-width: 260px;
-    padding: 12px;
-    margin: 0 auto 18px auto;
-    border-radius: 10px;
-    border: 1px solid var(--glass-border);
-    background: rgba(255,255,255,0.7);
-    color: var(--text);
-    font-size: 15px;
-    outline: none;
-    display: block;
-    text-align: center;
-}
-
-.dark input {
-    background: rgba(40,40,40,0.7);
-}
-
-/* ---------- CATEGORY LABEL ---------- */
-.category {
-    margin: 14px 0 6px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-    opacity: 0.6;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* ---------- BUTTON GRID ---------- */
-.grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-
-/* ---------- ITEM BUTTONS ---------- */
-.item-btn {
-    padding: 12px 6px;
-    border-radius: 14px;
-    border: 1px solid var(--glass-border);
-    background: var(--button-bg);
-    cursor: pointer;
-    text-align: center;
-    transition: 0.25s;
-    color: var(--text);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 120px;
-    height: auto;
-    box-sizing: border-box;
-    position: relative;
-}
-
-.item-btn:hover {
-    background: var(--button-hover);
-    transform: translateY(-2px);
-}
-
-.item-btn.selected {
-    background: var(--button-active);
-    border-color: var(--text);
-    box-shadow: var(--glow);
-    transform: scale(1.06);
-}
-
-.item-btn.out-of-stock {
-    opacity: 0.3;
-    pointer-events: none;
-    filter: grayscale(1);
-}
-
-.item-btn .emoji {
-    font-size: 20px;
-    line-height: 1;
-    margin-bottom: 6px;
-    white-space: nowrap;
-}
-
-.item-btn span {
-    font-size: 12px;
-    line-height: 1.2;
-    opacity: 0.95;
-    max-width: 100%;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-}
-
-.qty-badge {
-    margin-top: 6px;
-    font-size: 11px;
-    font-weight: 800;
-    color: #3498db;
-}
-
-/* ---------- SUBMIT BUTTON ---------- */
-button.submit {
-    width: 100%;
-    padding: 12px;
-    margin-top: 18px;
-    border-radius: 10px;
-    border: none;
-    background: var(--button-bg);
-    color: var(--text);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-button.submit:hover {
-    background: var(--button-hover);
-}
-
-/* ---------- SUCCESS ---------- */
-.success {
-    margin-top: 12px;
-    padding: 10px;
-    background: rgba(0, 200, 80, 0.2);
-    border: 1px solid rgba(0, 200, 80, 0.4);
-    border-radius: 8px;
-    color: var(--text);
-    text-align: center;
-    display: none;
-}
+button.submit { width: 100%; padding: 14px; margin-top: 25px; border-radius: 10px; border: none; background: #3498db; color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+button.submit:disabled { background: #888; cursor: not-allowed; }
+.success { margin-top: 15px; padding: 12px; background: rgba(0, 200, 80, 0.2); border-radius: 8px; color: var(--text); text-align: center; display: none; border: 1px solid rgba(0,200,80,0.3); }
 </style>
 </head>
 
 <body>
-
-<div class="toggle-container">
-    <div class="toggle" id="themeToggle">
-        <div class="toggle-circle"></div>
-    </div>
-</div>
+<div class="toggle-container"><div class="toggle" id="themeToggle"><div class="toggle-circle"></div></div></div>
 
 <div class="card">
-    <div class="header">
-        <div class="logo">
-            <svg viewBox="0 0 100 100" class="logo-svg">
-                <path d="M35 25h30l-3 40a12 12 0 0 1-24 0l-3-40z" />
-                <line x1="40" y1="35" x2="60" y2="35" />
-            </svg>
-        </div>
-        <h2>Drink Station</h2>
-    </div>
-
+    <div class="header"><h2>Drink Station</h2></div>
     <form id="orderForm">
         <label>Your Name</label>
-        <input type="text" id="name" required placeholder="E.g. Bob">
+        <input type="text" id="name" required placeholder="Enter name...">
+        
+        <label>Search Menu</label>
+        <input type="text" id="search" placeholder="Filter items...">
 
-        <label>Search Items</label>
-        <input type="text" id="search" placeholder="Search...">
-
-        <div id="categories">Loading menu...</div>
-
+        <div id="menuContainer">Loading menu...</div>
+        
         <button type="submit" class="submit" id="submitBtn">Submit Order</button>
     </form>
-
     <div class="success" id="successBox"></div>
 </div>
 
 <script>
 const API_URL = 'https://order-drinks-1.onrender.com';
+let selectedItems = {}; 
 let inventoryData = {};
-let selectedItems = {}; // { id: quantity }
 
-/* ---------- THEME ---------- */
+// Theme Toggle
 const toggle = document.getElementById("themeToggle");
-toggle.onclick = () => {
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-};
-if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark");
+toggle.onclick = () => { document.body.classList.toggle("dark"); };
 
-/* ---------- LOAD DATA ---------- */
-async function loadMenu() {
+async function fetchMenu() {
     try {
         const res = await fetch(`${API_URL}/api/status`);
         const data = await res.json();
         inventoryData = data.inventory;
-        renderItems();
-    } catch (e) {
-        document.getElementById("categories").innerText = "Connection Error.";
-    }
+        renderMenu();
+    } catch (e) { document.getElementById("menuContainer").innerText = "Connection error."; }
 }
 
-/* ---------- RENDER ---------- */
-function renderItems() {
-    const container = document.getElementById("categories");
-    const filter = document.getElementById("search").value.toLowerCase();
+function renderMenu() {
+    const container = document.getElementById("menuContainer");
+    const searchTerm = document.getElementById("search").value.toLowerCase();
     container.innerHTML = "";
 
-    // Grouping logic for dynamic categories
-    const categories = {};
+    // The 3 categories you want to keep
+    const categories = { "Drinks": [], "Snacks": [], "Ice Cream": [] };
+
+    // Group items from inventoryData into categories
     Object.entries(inventoryData).forEach(([id, item]) => {
-        if (!item.name.toLowerCase().includes(filter)) return;
-        if (!categories[item.category]) categories[item.category] = [];
-        categories[item.category].push({ id, ...item });
+        if (item.name.toLowerCase().includes(searchTerm)) {
+            if (categories[item.category]) {
+                categories[item.category].push({ id, ...item });
+            }
+        }
     });
 
     Object.entries(categories).forEach(([catName, items]) => {
-        const catLabel = document.createElement("div");
-        catLabel.className = "category";
-        catLabel.textContent = catName;
-        container.appendChild(catLabel);
+        if (items.length === 0) return;
 
+        const catDiv = document.createElement("div");
+        catDiv.innerHTML = `<div class="category">${catName}</div>`;
         const grid = document.createElement("div");
         grid.className = "grid";
 
@@ -361,8 +125,8 @@ function renderItems() {
             
             btn.innerHTML = `
                 <div class="emoji">${item.emoji}</div>
-                <span>${item.name}</span>
-                ${qty > 0 ? `<div class="qty-badge">Qty: ${qty}</div>` : ''}
+                <div class="item-name">${item.name}</div>
+                ${qty > 0 ? `<div class="badge">x${qty}</div>` : ''}
             `;
 
             btn.onclick = () => {
@@ -371,55 +135,50 @@ function renderItems() {
                 } else {
                     delete selectedItems[item.id];
                 }
-                renderItems();
+                renderMenu();
             };
             grid.appendChild(btn);
         });
-        container.appendChild(grid);
+        catDiv.appendChild(grid);
+        container.appendChild(catDiv);
     });
 }
 
-document.getElementById("search").oninput = renderItems;
+document.getElementById("search").oninput = renderMenu;
 
-/* ---------- SUBMIT ---------- */
 document.getElementById('orderForm').onsubmit = async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
+    const itemsToOrder = [];
     
-    const drinkList = [];
     Object.entries(selectedItems).forEach(([id, qty]) => {
-        for(let i=0; i<qty; i++) drinkList.push(inventoryData[id].name);
+        for(let i=0; i<qty; i++) itemsToOrder.push(inventoryData[id].name);
     });
 
-    if (drinkList.length === 0) return alert("Select something first!");
+    if (itemsToOrder.length === 0) return alert("Select at least one item!");
 
-    const submitBtn = document.getElementById('submitBtn');
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Sending...";
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.innerText = "Sending...";
 
     try {
         const res = await fetch(`${API_URL}/send-order`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, drink: drinkList })
+            body: JSON.stringify({ name, drink: itemsToOrder })
         });
-
         if (res.ok) {
-            document.getElementById('successBox').textContent = `Thanks ${name}! Order sent.`;
-            document.getElementById('successBox').style.display = "block";
-            document.getElementById('orderForm').reset();
+            const box = document.getElementById('successBox');
+            box.style.display = "block";
+            box.innerText = "Order sent successfully!";
             selectedItems = {};
-            loadMenu();
+            document.getElementById('orderForm').reset();
+            fetchMenu();
         }
-    } catch (err) {
-        alert("Server error.");
-    }
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Submit Order";
+    } catch (e) { alert("Error connecting to server."); }
+    btn.disabled = false; btn.innerText = "Submit Order";
 };
 
-loadMenu();
+fetchMenu();
 </script>
-
 </body>
 </html>
