@@ -6,100 +6,131 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
+
+// 1. ALLOW PERMISSIONS (CORS)
+// This is essential so your admin.html can talk to the server
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '.')));
 
-// Initialize Resend with your API Key from Render Environment Variables
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Path to your inventory/order notebook
 const DATA_FILE = path.join(__dirname, 'data.json');
 
-/**
- * 1. GET STATUS
- * Used by index.html to show stock and admin.html to show everything.
- */
+// Initialize data.json if it doesn't exist
+if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify({ inventory: {}, orders: [] }, null, 2));
+}
+
+// 2. GET STATUS (Used by Index and Admin)
 app.get('/api/status', (req, res) => {
     try {
         const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
         res.json(data);
     } catch (err) {
-        console.error("Read Error:", err);
-        res.status(500).json({ error: "Could not read data file" });
+        res.status(500).json({ error: "Could not read data" });
     }
 });
 
-/**
- * 2. SEND ORDER
- * Subtracts stock, saves the order log, and sends the email.
- */
-app.post('/send-order', async (req, res) => {
-    const { name, drink } = req.body; // 'drink' is the array of selected items
-
+// 3. CREATE NEW ITEM (The part that makes your button work!)
+app.post('/api/add-item', (req, res) => {
     try {
-        // Load data
+        const { name, emoji, category } = req.body;
         let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
-        // Deduct stock for each item (if it exists)
-        drink.forEach(item => {
-            if (data.inventory[item] !== undefined && data.inventory[item] > 0) {
-                data.inventory[item] -= 1;
-            }
-        });
+        // Generate a unique ID (e.g., "Apple Juice" -> "apple-juice")
+        const id = name.toLowerCase().replace(/\s+/g, '-');
 
-        // Add to order history
-        data.orders.push({
+        // Add the new item object
+        data.inventory[id] = {
             name: name,
-            items: drink,
-            time: new Date().toLocaleString('en-GB', { timeZone: 'UTC' })
-        });
+            emoji: emoji,
+            category: category,
+            stock: 0
+        };
 
-        // Save updated data back to the file
         fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-
-        // Send Email via Resend
-        await resend.emails.send({
-            from: 'onboarding@resend.dev', 
-            to: process.env.MY_NOTIFICATION_EMAIL, 
-            subject: '☕ New Drink Order!',
-            html: `<p><strong>${name}</strong> ordered: <strong>${drink.join(', ')}</strong>.</p>`
-        });
-
-        console.log(`Success: Order saved and email sent for ${name}`);
-        res.status(200).send({ success: true });
-
-    } catch (error) {
-        console.error('Order processing failed:', error);
-        res.status(500).send({ success: false, error: error.message });
+        console.log(`Added new item: ${name}`);
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error("Add Item Error:", err);
+        res.status(500).json({ error: "Failed to add item" });
     }
 });
 
-/**
- * 3. RESTOCK (Admin Only)
- * Used by admin.html to add stock back to the inventory.
- */
+// 4. UPDATE STOCK (Restock)
 app.post('/api/restock', (req, res) => {
-    const { item, amount } = req.body;
     try {
+        const { item, amount } = req.body;
         let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
-        
-        if (data.inventory[item] !== undefined) {
-            data.inventory[item] += amount;
-            // Prevent negative stock
-            if (data.inventory[item] < 0) data.inventory[item] = 0;
 
+        if (data.inventory[item]) {
+            data.inventory[item].stock += amount;
+            if (data.inventory[item].stock < 0) data.inventory[item].stock = 0;
             fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-            res.json({ success: true, newCount: data.inventory[item] });
+            res.json({ success: true });
         } else {
             res.status(404).json({ error: "Item not found" });
         }
     } catch (err) {
-        res.status(500).json({ error: "Failed to update stock" });
+        res.status(500).json({ error: "Stock update failed" });
     }
 });
 
-// Use Render's dynamic port or default to 3000
+// 5. DELETE ITEM
+app.post('/api/delete-item', (req, res) => {
+    try {
+        const { id } = req.body;
+        let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+        
+        delete data.inventory[id];
+        
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: "Delete failed" });
+    }
+});
+
+// 6. PLACE ORDER
+app.post('/send-order', async (req, res) => {
+    try {
+        const { name, drink } = req.body;
+        let data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+
+        // Subtract stock for each item ordered
+        drink.forEach(orderedName => {
+            const itemKey = Object.keys(data.inventory).find(key => data.inventory[key].name === orderedName);
+            if (itemKey && data.inventory[itemKey].stock > 0) {
+                data.inventory[itemKey].stock -= 1;
+            }
+        });
+
+        // Log the order
+        const newOrder = { 
+            name, 
+            items: drink, 
+            time: new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' }) 
+        };
+        data.orders.push(newOrder);
+
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+
+        // Send Email
+        await resend.emails.send({
+            from: 'onboarding@resend.dev',
+            to: process.env.MY_NOTIFICATION_EMAIL,
+            subject: `New Order from ${name}`,
+            html: `<p><strong>${name}</strong> ordered: ${drink.join(', ')}</p>`
+        });
+
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error("Order Error:", err);
+        res.status(500).json({ error: "Order failed" });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Drink Station Backend running on port ${PORT}`);
+    console.log(`Server is live on port ${PORT}`);
 });
