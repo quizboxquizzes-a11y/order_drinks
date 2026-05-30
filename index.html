@@ -163,10 +163,12 @@ input {
 /* ---------- CATEGORY LABEL ---------- */
 .category {
     margin: 14px 0 6px;
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 700;
     color: var(--text);
-    opacity: 0.8;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 /* ---------- BUTTON GRID ---------- */
@@ -193,6 +195,7 @@ input {
     min-height: 120px;
     height: auto;
     box-sizing: border-box;
+    position: relative;
 }
 
 .item-btn:hover {
@@ -207,12 +210,10 @@ input {
     transform: scale(1.06);
 }
 
-/* OUT OF STOCK STYLE */
 .item-btn.out-of-stock {
     opacity: 0.3;
     pointer-events: none;
     filter: grayscale(1);
-    cursor: not-allowed;
 }
 
 .item-btn .emoji {
@@ -223,13 +224,20 @@ input {
 }
 
 .item-btn span {
-    font-size: 13px;
-    line-height: 1.25;
+    font-size: 12px;
+    line-height: 1.2;
     opacity: 0.95;
     max-width: 100%;
     text-align: center;
     word-wrap: break-word;
     white-space: normal;
+}
+
+.qty-badge {
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #3498db;
 }
 
 /* ---------- SUBMIT BUTTON ---------- */
@@ -273,7 +281,6 @@ button.submit:hover {
 </div>
 
 <div class="card">
-
     <div class="header">
         <div class="logo">
             <svg viewBox="0 0 100 100" class="logo-svg">
@@ -291,7 +298,7 @@ button.submit:hover {
         <label>Search Items</label>
         <input type="text" id="search" placeholder="Search...">
 
-        <div id="categories">Loading menu and stock...</div>
+        <div id="categories">Loading menu...</div>
 
         <button type="submit" class="submit" id="submitBtn">Submit Order</button>
     </form>
@@ -300,81 +307,45 @@ button.submit:hover {
 </div>
 
 <script>
-/* ---------- CONFIG ---------- */
 const API_URL = 'https://order-drinks-1.onrender.com';
+let inventoryData = {};
+let selectedItems = {}; // { id: quantity }
 
-/* ---------- DARK/LIGHT MODE ---------- */
+/* ---------- THEME ---------- */
 const toggle = document.getElementById("themeToggle");
-toggle.addEventListener("click", () => {
+toggle.onclick = () => {
     document.body.classList.toggle("dark");
     localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-});
+};
 if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark");
 
-/* ---------- ITEMS WITH CATEGORIES ---------- */
-const categories = {
-    "Drinks": [
-        ["Water", "💧"],
-        ["Beer", "🍺"],
-        ["J20 - Orange + Passionfruit", "🍊🥭"],
-        ["J20 - Apple + Raspberry", "🍎🍑"],
-        ["Apple Juice", "🍏"],
-        ["Berries and Cherries Cider", "🍒🍓"],
-        ["Kiwi and Lime Cider", "🥝🍋"],
-        ["Fizzy J20 - Apples and Mango", "🍏🥭"],
-        ["Chardonnay/Pinot Noir Wine", "🍷🍇"],
-        ["English Sparkling Wine", "🍾🥂"],
-        ["Gin and Tonic", "🍸🥂"],
-        ["Non-Alcoholic Gin and Tonic", "🚫🍸"],
-        ["Non-Alcoholic Real Sparkling Wine", "🚫🍷🍇"],
-        ["Graham Beck Sparkling Wine", "🍾🥂"]
-    ],
-    "Snacks": [
-        ["Good Crisp Company - Original", "🥔"],
-        ["Good Crisp Company - Sour Cream and Onion", "🥔🍦"],
-        ["Pringles - Sour Cream and Onion", "🥔🍦"],
-        ["Tomatoes", "🍅"],
-        ["Sea Salt Lentil Chips", "🧂🥣"],
-        ["Alcoholic Bailey's Popcorn", "🍿🎁"],
-        ["Strawberries and Chocolate", "🍓🍫"]
-    ],
-    "Ice Cream": [
-        ["Strawberry Cornetto", "🍓🍦"],
-        ["Chocolate Cornetto", "🍫🍦"],
-        ["Orange Solero", "🍊🍦"],
-        ["Pistachio Magnum", "🍦🍫"],
-        ["Chocolate Magnum", "🍦🍫"],
-        ["Mini Twister", "🤝🍦🍭"]
-    ]
-};
-
-const container = document.getElementById("categories");
-let selectedItems = [];
-let currentStock = {};
-
-/* ---------- FETCH DATA AND RENDER ---------- */
-async function fetchStockAndRender(filter = "") {
+/* ---------- LOAD DATA ---------- */
+async function loadMenu() {
     try {
         const res = await fetch(`${API_URL}/api/status`);
         const data = await res.json();
-        currentStock = data.inventory; // Store the stock levels
-        renderItems(filter);
+        inventoryData = data.inventory;
+        renderItems();
     } catch (e) {
-        console.error("Stock check failed:", e);
-        container.textContent = "Error loading menu. Is the server running?";
+        document.getElementById("categories").innerText = "Connection Error.";
     }
 }
 
-function renderItems(filter = "") {
+/* ---------- RENDER ---------- */
+function renderItems() {
+    const container = document.getElementById("categories");
+    const filter = document.getElementById("search").value.toLowerCase();
     container.innerHTML = "";
 
+    // Grouping logic for dynamic categories
+    const categories = {};
+    Object.entries(inventoryData).forEach(([id, item]) => {
+        if (!item.name.toLowerCase().includes(filter)) return;
+        if (!categories[item.category]) categories[item.category] = [];
+        categories[item.category].push({ id, ...item });
+    });
+
     Object.entries(categories).forEach(([catName, items]) => {
-        const filtered = items.filter(([name]) =>
-            name.toLowerCase().includes(filter.toLowerCase())
-        );
-
-        if (filtered.length === 0) return;
-
         const catLabel = document.createElement("div");
         catLabel.className = "category";
         catLabel.textContent = catName;
@@ -383,94 +354,71 @@ function renderItems(filter = "") {
         const grid = document.createElement("div");
         grid.className = "grid";
 
-        filtered.forEach(([name, emoji]) => {
+        items.forEach(item => {
             const btn = document.createElement("div");
-            btn.className = "item-btn";
+            const qty = selectedItems[item.id] || 0;
+            btn.className = `item-btn ${item.stock <= 0 ? 'out-of-stock' : ''} ${qty > 0 ? 'selected' : ''}`;
             
-            // CHECK STOCK LEVEL
-            const stockLevel = currentStock[name] || 0;
-            
-            if (stockLevel <= 0) {
-                btn.classList.add("out-of-stock");
-                btn.innerHTML = `
-                    <div class="emoji">❌</div>
-                    <span>${name}<br>(Sold Out)</span>
-                `;
-            } else {
-                btn.innerHTML = `
-                    <div class="emoji">${emoji}</div>
-                    <span>${name}</span>
-                `;
+            btn.innerHTML = `
+                <div class="emoji">${item.emoji}</div>
+                <span>${item.name}</span>
+                ${qty > 0 ? `<div class="qty-badge">Qty: ${qty}</div>` : ''}
+            `;
 
-                if (selectedItems.includes(name)) btn.classList.add("selected");
-
-                btn.addEventListener("click", () => {
-                    btn.classList.toggle("selected");
-                    if (selectedItems.includes(name)) {
-                        selectedItems = selectedItems.filter(i => i !== name);
-                    } else {
-                        selectedItems.push(name);
-                    }
-                });
-            }
-
+            btn.onclick = () => {
+                if (qty < item.stock) {
+                    selectedItems[item.id] = qty + 1;
+                } else {
+                    delete selectedItems[item.id];
+                }
+                renderItems();
+            };
             grid.appendChild(btn);
         });
-
         container.appendChild(grid);
     });
 }
 
-// Initial Load
-fetchStockAndRender();
+document.getElementById("search").oninput = renderItems;
 
-/* ---------- SEARCH ---------- */
-document.getElementById("search").addEventListener("input", (e) => {
-    renderItems(e.target.value);
-});
-
-/* ---------- FORM SUBMIT ---------- */
-const form = document.getElementById('orderForm');
-const successBox = document.getElementById('successBox');
-const submitBtn = document.getElementById('submitBtn');
-
-form.addEventListener('submit', async (e) => {
+/* ---------- SUBMIT ---------- */
+document.getElementById('orderForm').onsubmit = async (e) => {
     e.preventDefault();
-
     const name = document.getElementById('name').value;
+    
+    const drinkList = [];
+    Object.entries(selectedItems).forEach(([id, qty]) => {
+        for(let i=0; i<qty; i++) drinkList.push(inventoryData[id].name);
+    });
 
-    if (selectedItems.length === 0) {
-        alert("Please select at least one item.");
-        return;
-    }
+    if (drinkList.length === 0) return alert("Select something first!");
 
+    const submitBtn = document.getElementById('submitBtn');
     submitBtn.disabled = true;
     submitBtn.textContent = "Sending...";
 
     try {
-        const response = await fetch(`${API_URL}/send-order`, {
+        const res = await fetch(`${API_URL}/send-order`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, drink: selectedItems })
+            body: JSON.stringify({ name, drink: drinkList })
         });
 
-        if (response.ok) {
-            successBox.textContent = `Thanks ${name}! Your order was sent.`;
-            successBox.style.display = "block";
-            form.reset();
-            selectedItems = [];
-            // Refresh stock and list after order
-            fetchStockAndRender();
-        } else {
-            alert("Server error. Try again later.");
+        if (res.ok) {
+            document.getElementById('successBox').textContent = `Thanks ${name}! Order sent.`;
+            document.getElementById('successBox').style.display = "block";
+            document.getElementById('orderForm').reset();
+            selectedItems = {};
+            loadMenu();
         }
     } catch (err) {
-        alert("Could not connect to the server.");
+        alert("Server error.");
     }
-
     submitBtn.disabled = false;
     submitBtn.textContent = "Submit Order";
-});
+};
+
+loadMenu();
 </script>
 
 </body>
