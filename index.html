@@ -89,8 +89,20 @@ async function fetchMenu() {
         const res = await fetch(`${API_URL}/api/status`);
         const data = await res.json();
         inventoryData = data.inventory;
+        
+        // Auto-deselect items that just ran out of stock
+        Object.keys(selectedItems).forEach(id => {
+            if (!inventoryData[id] || inventoryData[id].stock <= 0) {
+                delete selectedItems[id];
+            } else if (selectedItems[id] > inventoryData[id].stock) {
+                selectedItems[id] = inventoryData[id].stock;
+            }
+        });
+
         renderMenu();
-    } catch (e) { document.getElementById("menuContainer").innerText = "Connection error."; }
+    } catch (e) { 
+        console.error("Sync error");
+    }
 }
 
 function renderMenu() {
@@ -98,10 +110,8 @@ function renderMenu() {
     const searchTerm = document.getElementById("search").value.toLowerCase();
     container.innerHTML = "";
 
-    // The 3 categories you want to keep
     const categories = { "Drinks": [], "Snacks": [], "Ice Cream": [] };
 
-    // Group items from inventoryData into categories
     Object.entries(inventoryData).forEach(([id, item]) => {
         if (item.name.toLowerCase().includes(searchTerm)) {
             if (categories[item.category]) {
@@ -121,15 +131,20 @@ function renderMenu() {
         items.forEach(item => {
             const btn = document.createElement("div");
             const qty = selectedItems[item.id] || 0;
-            btn.className = `item-btn ${item.stock <= 0 ? 'out-of-stock' : ''} ${qty > 0 ? 'selected' : ''}`;
+            const isOutOfStock = item.stock <= 0;
+            
+            btn.className = `item-btn ${isOutOfStock ? 'out-of-stock' : ''} ${qty > 0 ? 'selected' : ''}`;
             
             btn.innerHTML = `
                 <div class="emoji">${item.emoji}</div>
                 <div class="item-name">${item.name}</div>
                 ${qty > 0 ? `<div class="badge">x${qty}</div>` : ''}
+                ${isOutOfStock ? `<div style="font-size:9px; color:red; font-weight:bold; margin-top:3px;">SOLD OUT</div>` : ''}
             `;
 
             btn.onclick = () => {
+                if (isOutOfStock) return; 
+                
                 if (qty < item.stock) {
                     selectedItems[item.id] = qty + 1;
                 } else {
@@ -155,7 +170,7 @@ document.getElementById('orderForm').onsubmit = async (e) => {
         for(let i=0; i<qty; i++) itemsToOrder.push(inventoryData[id].name);
     });
 
-    if (itemsToOrder.length === 0) return alert("Select at least one item!");
+    if (itemsToOrder.length === 0) return alert("Select at least one available item!");
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.innerText = "Sending...";
@@ -173,12 +188,16 @@ document.getElementById('orderForm').onsubmit = async (e) => {
             selectedItems = {};
             document.getElementById('orderForm').reset();
             fetchMenu();
+            setTimeout(() => { box.style.display = "none"; }, 5000);
         }
     } catch (e) { alert("Error connecting to server."); }
     btn.disabled = false; btn.innerText = "Submit Order";
 };
 
+// Start Auto-Sync: fetches data every 5 seconds
 fetchMenu();
+setInterval(fetchMenu, 5000);
+
 </script>
 </body>
 </html>
